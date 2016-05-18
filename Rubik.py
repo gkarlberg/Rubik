@@ -29,6 +29,16 @@ class Cube2x2x2:
         return r
 
     @staticmethod
+    def generate_u():
+        r = np.identity(24, 'int')
+        v = np.array([0, 1], 'int')
+        t = [1, 3, 0, 2, 16, 17, 20, 21, 20, 21, 22, 23]
+        f = [0, 1, 2, 3, 4, 5, 14, 15, 16, 17, 20, 21]
+        for i, j in zip(t, f):
+            r[i, [i, j]] = v
+        return r
+
+    @staticmethod
     def create_solved_cube():
         return np.array([0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5], 'int')
 
@@ -40,7 +50,6 @@ class Cube2x2x2:
                 .format(r[i, 0], r[i, 1], r[i, 2], r[i, 3], r[i, 4], r[i, 5], r[i, 6], r[i, 7], r[i, 8],
                         r[i, 9], r[i, 10], r[i, 11], r[i, 12], r[i, 13], r[i, 14], r[i, 15], r[i, 16], r[i, 17],
                         r[i, 18], r[i, 19], r[i, 20], r[i, 21], r[i, 22], r[i, 23])
-
 
     def print_state(self):
         c = []

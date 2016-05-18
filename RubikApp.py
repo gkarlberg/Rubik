@@ -18,6 +18,15 @@ print
 print "Ri"
 Cube2x2x2.print_rotation_matrix(cube.Ri)
 print
+print "R*R"
+print Cube2x2x2.print_rotation_matrix(cube.R.dot(cube.R))
+print
+print "R*R*R"
+print Cube2x2x2.print_rotation_matrix(cube.R.dot(cube.R).dot(cube.R))
+print
+print "R*R*R*R"
+print Cube2x2x2.print_rotation_matrix(cube.R.dot(cube.R).dot(cube.R).dot(cube.R))
+print
 print "original state"
 print cube.state
 cube.r()
