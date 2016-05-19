@@ -11,6 +11,8 @@ class Cube2x2x2:
         self.Li = Cube2x2x2.generate_li()
         self.U = Cube2x2x2.generate_u()
         self.Ui = Cube2x2x2.generate_ui()
+        self.D = Cube2x2x2.generate_d()
+        self.Di = Cube2x2x2.generate_di()
 
     @staticmethod
     def generate_ri():
@@ -64,6 +66,26 @@ class Cube2x2x2:
 
     @staticmethod
     def generate_ui():
+        r = np.identity(24, 'int')
+        v = np.array([0, 1], 'int')
+        t = [0, 1, 2, 3, 4, 5, 14, 15, 16, 17, 20, 21]
+        f = [1, 3, 0, 2, 16, 17, 21, 20, 15, 14, 4, 5]
+        for i, j in zip(t, f):
+            r[i, [i, j]] = v
+        return r
+
+    @staticmethod
+    def generate_d():
+        r = np.identity(24, 'int')
+        v = np.array([0, 1], 'int')
+        t = [0, 1, 2, 3, 4, 5, 14, 15, 16, 17, 20, 21]
+        f = [2, 0, 3, 1, 20, 21, 17, 16, 4, 5, 15, 14]
+        for i, j in zip(t, f):
+            r[i, [i, j]] = v
+        return r
+
+    @staticmethod
+    def generate_di():
         r = np.identity(24, 'int')
         v = np.array([0, 1], 'int')
         t = [0, 1, 2, 3, 4, 5, 14, 15, 16, 17, 20, 21]
