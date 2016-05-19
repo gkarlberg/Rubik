@@ -160,3 +160,9 @@ class Cube2x2x2:
 
     def ui(self):
         self.state = self.Ui.dot(self.state)
+
+    def d(self):
+        self.state = self.D.dot(self.state)
+
+    def di(self):
+        self.state = self.Di.dot(self.state)
