@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 
 class Cube2x2x2:
@@ -13,6 +14,14 @@ class Cube2x2x2:
         self.Ui = Cube2x2x2.generate_ui()
         self.D = Cube2x2x2.generate_d()
         self.Di = Cube2x2x2.generate_di()
+        self.Y = self.U.dot(self.Di)
+        self.Yi = self.Ui.dot(self.D)
+        self.X = self.R.dot(self.Li)
+        self.Xi = self.Ri.dot(self.L)
+        self.Z = self.Yi.dot(self.Xi).dot(self.Y)
+        self.Zi = self.Y.dot(self.Xi).dot(self.Yi)
+        self.F = self.Yi.dot(self.L).dot(self.Y)
+        self.Fi = self.Yi.dot(self.Li).dot(self.Y)
 
     @staticmethod
     def generate_ri():
@@ -78,8 +87,8 @@ class Cube2x2x2:
     def generate_d():
         r = np.identity(24, 'int')
         v = np.array([0, 1], 'int')
-        t = [0, 1, 2, 3, 4, 5, 14, 15, 16, 17, 20, 21]
-        f = [2, 0, 3, 1, 20, 21, 17, 16, 4, 5, 15, 14]
+        t = [6, 7, 8, 9, 10, 11, 12, 13, 18, 19, 22, 23]
+        f = [18, 19, 10, 8, 11, 9, 23, 22, 13, 12, 6, 7]
         for i, j in zip(t, f):
             r[i, [i, j]] = v
         return r
@@ -88,8 +97,8 @@ class Cube2x2x2:
     def generate_di():
         r = np.identity(24, 'int')
         v = np.array([0, 1], 'int')
-        t = [0, 1, 2, 3, 4, 5, 14, 15, 16, 17, 20, 21]
-        f = [1, 3, 0, 2, 16, 17, 21, 20, 15, 14, 4, 5]
+        t = [6, 7, 8, 9, 10, 11, 12, 13, 18, 19, 22, 23]
+        f = [22, 23, 9, 11, 8, 10, 19, 18, 6, 7, 13, 12]
         for i, j in zip(t, f):
             r[i, [i, j]] = v
         return r
@@ -106,6 +115,154 @@ class Cube2x2x2:
                 .format(r[i, 0], r[i, 1], r[i, 2], r[i, 3], r[i, 4], r[i, 5], r[i, 6], r[i, 7], r[i, 8],
                         r[i, 9], r[i, 10], r[i, 11], r[i, 12], r[i, 13], r[i, 14], r[i, 15], r[i, 16], r[i, 17],
                         r[i, 18], r[i, 19], r[i, 20], r[i, 21], r[i, 22], r[i, 23])
+
+    @staticmethod
+    def color(item):
+        if item < 4:
+            return 'W'
+        elif item < 8:
+            return 'B'
+        elif item < 12:
+            return 'Y'
+        elif item < 16:
+            return 'G'
+        elif item < 20:
+            return 'R'
+        else:
+            return 'O'
+
+    def correct_neighbors(self):
+        neighbors = 0
+        for i in range(0, 6):
+            c0 = Cube2x2x2.color(self.state[i*4 + 0])
+            c1 = Cube2x2x2.color(self.state[i*4 + 1])
+            c2 = Cube2x2x2.color(self.state[i*4 + 2])
+            c3 = Cube2x2x2.color(self.state[i*4 + 3])
+            if c0 == c1 and c0 == c2 and c3 == c2 and c3 == c1:
+                neighbors += 4
+            elif (c0 == c1 and c0 == c2) or (c3 == c2 and c3 == c1) or (c0 == c1 and c2 == c3) or (c0 == c2 and c3 == c1):
+                neighbors += 2
+            elif c0 == c1 or c1 == c3 or c3 == c2 or c2 == c1:
+                neighbors += 1
+        return neighbors
+
+    def is_same_state(self, state):
+        # First side
+        self_initial = self.state.copy()
+        if np.array_equal(self.state, state):
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        self.x()
+        # Second side
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        # Third side
+        self.y()
+        self.x()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        # Fourth side
+        self.y()
+        self.x()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        # Fifth side
+        self.y()
+        self.x()
+        self.z()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        # Sixth side
+        self.y()
+        self.z()
+        self.z()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.y()
+        if np.array_equal(self.state, state):
+            self.state = self_initial
+            return True
+        self.state = self_initial
+        return False
+
+    def state_to_string(self):
+        state_as_string = ""
+        for i in range(0, 24):
+            state_as_string += str(self.state) + " "
+        return state_as_string
 
     def print_state(self):
         c = []
@@ -166,3 +323,66 @@ class Cube2x2x2:
 
     def di(self):
         self.state = self.Di.dot(self.state)
+
+    def f(self):
+        self.state = self.F.dot(self.state)
+
+    def fi(self):
+        self.state = self.Fi.dot(self.state)
+
+    def y(self):
+        self.state = self.Y.dot(self.state)
+
+    def yi(self):
+        self.state = self.Yi.dot(self.state)
+
+    def x(self):
+        self.state = self.X.dot(self.state)
+
+    def xi(self):
+        self.state = self.Xi.dot(self.state)
+
+    def z(self):
+        self.state = self.Z.dot(self.state)
+
+    def zi(self):
+        self.state = self.Zi.dot(self.state)
+
+    def random_turn(self):
+        method = random.randint(1, 10)
+        if method == 1:
+            self.r()
+            return "R"
+        if method == 2:
+            self.ri()
+            return "Ri"
+        if method == 3:
+            self.l()
+            return "L"
+        if method == 4:
+            self.li()
+            return "Li"
+        if method == 5:
+            self.u()
+            return "U"
+        if method == 6:
+            self.ui()
+            return "Ui"
+        if method == 7:
+            self.d()
+            return "D"
+        if method == 8:
+            self.di()
+            return "Di"
+        if method == 9:
+            self.f()
+            return "F"
+        if method == 10:
+            self.fi()
+            return "Fi"
+
+
+
+
+
+

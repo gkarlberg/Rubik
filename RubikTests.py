@@ -1,6 +1,7 @@
 import unittest
 from Rubik import *
 import numpy as np
+import random
 
 
 class Tests(unittest.TestCase):
@@ -44,6 +45,44 @@ class Tests(unittest.TestCase):
         I = Di.dot(Di).dot(Di).dot(Di)
         self.assertTrue(np.array_equal(I, np.identity(24)))
 
+    def test_F(self):
+        cube = Cube2x2x2()
+        F = cube.F
+        Fi = cube.Fi
+        I = F.dot(Fi)
+        self.assertTrue(np.array_equal(I, np.identity(24)))
+        I = F.dot(F).dot(F).dot(F)
+        self.assertTrue(np.array_equal(I, np.identity(24)))
+        I = Fi.dot(Fi).dot(Fi).dot(Fi)
+        self.assertTrue(np.array_equal(I, np.identity(24)))
+
+    def test_X(self):
+        cube = Cube2x2x2()
+        X = cube.X
+        Xi = cube.Xi
+        I = X.dot(X).dot(X).dot(X)
+        self.assertTrue(np.array_equal(I, np.identity(24)))
+        I = X.dot(Xi)
+        self.assertTrue(np.array_equal(I, np.identity(24)))
+
+    def test_Y(self):
+        cube = Cube2x2x2()
+        Y = cube.Y
+        Yi = cube.Yi
+        I = Y.dot(Y).dot(Y).dot(Y)
+        self.assertTrue(np.array_equal(I, np.identity(24)))
+        I = Y.dot(Yi)
+        self.assertTrue(np.array_equal(I, np.identity(24)))
+
+    def test_Z(self):
+        cube = Cube2x2x2()
+        Z = cube.Z
+        Zi = cube.Zi
+        I = Z.dot(Z).dot(Z).dot(Z)
+        self.assertTrue(np.array_equal(I, np.identity(24)))
+        I = Z.dot(Zi)
+        self.assertTrue(np.array_equal(I, np.identity(24)))
+
     def test_URLDDiLiRiUi(self):
         U = Cube2x2x2.generate_u()
         R = Cube2x2x2.generate_r()
@@ -75,3 +114,26 @@ class Tests(unittest.TestCase):
             cube.l()
             cube.u()
         self.assertTrue(np.array_equal(initial_state, cube.state))
+
+    def test_is_same_state(self):
+        initial_cube = Cube2x2x2()
+        cube = Cube2x2x2()
+        self.assertTrue(initial_cube.is_same_state(cube.state))
+        for i in range(0, 100):
+            method = random.randint(1, 6)
+            if method == 1:
+                cube.x()
+            if method == 2:
+                cube.xi()
+            if method == 3:
+                cube.y()
+            if method == 4:
+                cube.yi()
+            if method == 5:
+                cube.z()
+            if method == 6:
+                cube.zi()
+            self.assertTrue(initial_cube.is_same_state(cube.state))
+        cube.r()
+        self.assertFalse(initial_cube.is_same_state(cube.state))
+
