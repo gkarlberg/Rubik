@@ -9,8 +9,13 @@ turn_sequence = []
 skip = 100
 N = 5000000
 max_cn = 0
-last = 10
+last = 25
+print_intervall = 10000
+print_index = 1000
 for i in range(1, N + skip):
+    if i == print_index:
+        print i/print_intervall, " of ", N/print_intervall
+        print_index += print_intervall
     turn = cube.random_turn()
     if i > skip:
         j = i - skip
@@ -42,13 +47,11 @@ for i in range(1, N + skip):
 for key, value in histogram.iteritems():
     print key, value
 
-plt.plot(max_cn_cn_sequence)
+fig1 = plt.figure()
+ax1 = fig1.add_subplot(1,1,1)
+ax1.plot(max_cn_cn_sequence)
 plt.show()
-
-
-
-
-
-
-
-
+fig2 = plt.figure()
+ax2 = fig2.add_subplot(1,1,1)
+ax2.bar(histogram.keys(), histogram.values())
+plt.show()
