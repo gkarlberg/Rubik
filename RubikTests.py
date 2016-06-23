@@ -51,9 +51,9 @@ class Tests(unittest.TestCase):
         Fi = cube.Fi
         I = F.dot(Fi)
         self.assertTrue(np.array_equal(I, np.identity(24)))
-        I = F.dot(F).dot(F).dot(F)
+        I = F.dot(F.dot(F.dot(F)))
         self.assertTrue(np.array_equal(I, np.identity(24)))
-        I = Fi.dot(Fi).dot(Fi).dot(Fi)
+        I = Fi.dot(Fi.dot(Fi.dot(Fi)))
         self.assertTrue(np.array_equal(I, np.identity(24)))
 
     def test_X(self):
@@ -104,6 +104,15 @@ class Tests(unittest.TestCase):
             cube.ri()
             cube.ui()
         self.assertTrue(np.array_equal(initial_state, cube.state))
+        
+        cube = Cube2x2x2()
+        U = cube.U
+        R = cube.R
+        Ui = cube.Ui
+        Ri = cube.Ri
+        M = U.dot(R.dot(Ri.dot(Ui)))
+        I = M.dot(M.dot(M.dot(M.dot(M.dot(M)))))
+        self.assertTrue(np.array_equal(I, np.identity(24)))
 
     def test_6xLiUiLU(self):
         cube = Cube2x2x2()
@@ -114,6 +123,15 @@ class Tests(unittest.TestCase):
             cube.l()
             cube.u()
         self.assertTrue(np.array_equal(initial_state, cube.state))
+        
+        cube = Cube2x2x2()
+        Li = cube.Li
+        Ui = cube.Ui
+        L = cube.L
+        U = cube.U
+        M = Li.dot(Ui.dot(L.dot(U)))
+        I = M.dot(M.dot(M.dot(M.dot(M.dot(M)))))
+        self.assertTrue(np.array_equal(I, np.identity(24)))
 
     def test_is_same_state(self):
         initial_cube = Cube2x2x2()
@@ -137,3 +155,15 @@ class Tests(unittest.TestCase):
         cube.r()
         self.assertFalse(initial_cube.is_same_state(cube.state))
 
+    def test_complex_unity_operations(self):
+        cube = Cube2x2x2()
+        U = cube.U
+        R = cube.R
+        F = cube.F
+        D = cube.D
+        Ui = cube.Ui
+        Ri = cube.Ri
+        Fi = cube.Fi
+        Di = cube.Di
+        I = F.dot(R.dot(U.dot(D.dot(Di.dot(Ui.dot(Ri.dot(Fi)))))))
+        self.assertTrue(np.array_equal(I, np.identity(24)))
